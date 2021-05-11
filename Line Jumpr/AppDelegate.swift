@@ -6,16 +6,21 @@
 //
 
 import UIKit
-
+import UserNotifications
+import GoogleMobileAds
 @main
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
 
     var window: UIWindow?
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        GADMobileAds.sharedInstance().start(completionHandler: nil)
+        
         return true
+        
+        
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
@@ -24,11 +29,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
-        // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
+        let newcontent = UNMutableNotificationContent()
+            newcontent.title = "Come Back!"
+            newcontent.body = "We Miss You"
+            newcontent.sound = UNNotificationSound.default
+            
+            //259200
+            let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 259200, repeats: false)
+            
+        
+            
+            let request2 = UNNotificationRequest(identifier: "testidentifier", content: newcontent, trigger: trigger)
+        
+        UNUserNotificationCenter.current().add(request2, withCompletionHandler: nil)
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
-        // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
